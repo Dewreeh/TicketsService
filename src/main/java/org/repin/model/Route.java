@@ -1,9 +1,9 @@
 package org.repin.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @NoArgsConstructor
@@ -15,7 +15,7 @@ public class Route {
 
     private String destinationPoint;
 
-    private Carrier carrier;
+    private Long carrier_id;
 
     private Integer durationMinutes;
 }

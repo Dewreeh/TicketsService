@@ -1,16 +1,18 @@
 package org.repin.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class UserInfoDto {
-    @NotBlank
+    @NotBlank(message = "Логин не должен быть пустым")
     String login;
 
-    @NotBlank
+    @NotBlank(message = "Имя не должно быть пустым")
     String name;
 
-    @NotBlank
+    @NotBlank(message = "Пароль не должен быть пустым")
+    @Size(min = 5, message = "Минимальная длина пароля 5 символов")
     String password;
 }

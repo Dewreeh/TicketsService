@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -15,11 +14,12 @@ public class Ticket {
 
     private Long id;
 
-    private UUID route_id;
+    private Long routeId;
 
-    private LocalDateTime date_time;
+    private LocalDateTime dateTime;
 
-    private Integer seat_number;
+    private Integer seatNumber;
 
     private BigDecimal price;
+
 }

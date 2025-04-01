@@ -1,28 +1,25 @@
 package org.repin.controller;
 
-import org.repin.dto.AvaiableTicketsRequestDto;
+import org.repin.dto.ErrorResponse;
 import org.repin.model.Ticket;
-import org.repin.repository.TicketRepository;
+import org.repin.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
-    private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
 
     @Autowired
-    public TicketController(TicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     @GetMapping("/get")
@@ -30,12 +27,27 @@ public class TicketController {
             @RequestParam(name = "departure", required = false) String departure,
             @RequestParam(name = "destination", required = false) String destination,
             @RequestParam(name = "carrier", required = false) String carrier,
-            @RequestParam(name = "dateTime", required = false) LocalDateTime dateTime,
-            @RequestParam(name = "page", defaultValue = "0") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  int page,
+            @RequestParam(name = "dateTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
+            @RequestParam(name = "page", defaultValue = "0")  int page,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
 
-        List<Ticket> tickets = ticketRepository.findAvailableTickets(departure, destination, carrier, dateTime, page, pageSize);
-        System.out.println(tickets);
+        List<Ticket> tickets = ticketService.findAvailableTickets(departure, destination, carrier, dateTime, pageSize, page);
+
         return ResponseEntity.ok(tickets);
+    }
+
+    @PostMapping("/buy")
+    public ResponseEntity<Object> buyTicket(@RequestParam("ticketId") Long ticketId,
+                                            @RequestParam("userId") Long userId){
+        if(ticketService.buyTicket(ticketId, userId)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.badRequest().body(new ErrorResponse("Билет уже куплен"));
+    }
+
+    @GetMapping("/get_my")
+    public ResponseEntity<Object> buyTicket(@RequestParam("userId") Long userId){
+        List<Ticket> userTickets = ticketService.findUserTickets(userId);
+        return ResponseEntity.ok().body(userTickets);
     }
 }

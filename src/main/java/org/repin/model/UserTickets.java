@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTickets {
-    User user;
-    Ticket ticket;
+    Long user_id;
+    Long ticket_id;
 }
