@@ -1,9 +1,6 @@
 package org.repin.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.repin.model.Ticket;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,7 @@ public class KafkaProducerService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendTicketToKafka(Ticket ticket) throws JsonProcessingException {
+    public void sendTicketToKafka(Ticket ticket){
             kafkaTemplate.send("bought-tickets", ticket);
     }
 }

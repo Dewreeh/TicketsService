@@ -19,14 +19,17 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final RedisTemplate<Long, Ticket> redisTemplate;
+    private final KafkaProducerService kafkaProducerService;
 
     @Autowired
     TicketService(TicketRepository ticketRepository,
-                         UserRepository userRepository,
-                         RedisTemplate<Long, Ticket> redisTemplate) {
+                  UserRepository userRepository,
+                  RedisTemplate<Long, Ticket> redisTemplate,
+                  KafkaProducerService kafkaProducerService) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.redisTemplate = redisTemplate;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public List<Ticket> findAvailableTickets(String departure, String destination, String carrier, LocalDateTime dateTime, int limit, int offset){
@@ -66,7 +69,11 @@ public class TicketService {
 
         ticketRepository.markAsSold(ticketId, userId);
 
-        redisTemplate.opsForList().rightPush(userId, ticketRepository.find(ticketId).get()); //мы ранее уже проверили наличие билета по id, значит тут точно не будет null
+        Ticket ticket = ticketRepository.find(ticketId).get(); //для сохранения в редис и отправки в кафку + мы ранее уже проверили наличие билета по id в таблице купленных, значит тут точно не будет null
+
+        redisTemplate.opsForList().rightPush(userId, ticket);
+
+        kafkaProducerService.sendTicketToKafka(ticket);
 
         return ResponseEntity.ok("Билет приобретён");
     }
