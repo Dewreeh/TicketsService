@@ -27,9 +27,9 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> findByLogin(String login) {
-        String sql = "SELECT * FROM users WHERE login = ?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), login)
+    public Optional<User> find(Long id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), id)
                 .stream()
                 .findFirst();
     }

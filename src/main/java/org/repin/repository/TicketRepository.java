@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TicketRepository {
@@ -57,5 +58,12 @@ public class TicketRepository {
     public void markAsSold(Long ticketId, Long userId) {
         String sql = "INSERT INTO user_tickets (user_id, ticket_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, ticketId);
+    }
+
+    public Optional<Ticket> find(Long id) {
+        String sql = "SELECT * FROM tickets WHERE id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Ticket.class), id)
+                .stream()
+                .findFirst();
     }
 }

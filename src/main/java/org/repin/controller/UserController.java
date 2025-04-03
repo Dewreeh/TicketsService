@@ -32,19 +32,8 @@ public class UserController {
                 .build();
 
         userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь добавлен!");
     }
 
-    @PostMapping("/find")
-    ResponseEntity<Object> findByLogin(@Valid @RequestBody UserInfoDto dto) throws Exception {
-        User user = User
-                .builder()
-                .login(dto.getLogin())
-                .fullName(dto.getName())
-                .password(dto.getPassword())
-                .build();
-
-        userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
 }

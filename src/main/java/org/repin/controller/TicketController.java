@@ -1,14 +1,13 @@
 package org.repin.controller;
 
-import org.repin.dto.ErrorResponse;
 import org.repin.model.Ticket;
 import org.repin.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,16 +37,12 @@ public class TicketController {
 
     @PostMapping("/buy")
     public ResponseEntity<Object> buyTicket(@RequestParam("ticketId") Long ticketId,
-                                            @RequestParam("userId") Long userId){
-        if(ticketService.buyTicket(ticketId, userId)){
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.badRequest().body(new ErrorResponse("Билет уже куплен"));
+                                            @RequestParam("userId") Long userId) throws UserPrincipalNotFoundException {
+        return ticketService.buyTicket(ticketId, userId);
     }
 
     @GetMapping("/get_my")
-    public ResponseEntity<Object> buyTicket(@RequestParam("userId") Long userId){
-        List<Ticket> userTickets = ticketService.findUserTickets(userId);
-        return ResponseEntity.ok().body(userTickets);
+    public ResponseEntity<Object> getUserTickets(@RequestParam("userId") Long userId){
+        return ticketService.findUserTickets(userId);
     }
 }
