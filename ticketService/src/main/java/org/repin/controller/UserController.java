@@ -1,9 +1,11 @@
 package org.repin.controller;
 
 import jakarta.validation.Valid;
+import org.repin.dto.AuthRequest;
 import org.repin.dto.UserInfoDto;
 import org.repin.model.User;
 import org.repin.repository.UserRepository;
+import org.repin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    UserController(UserRepository userRepository){
-        this.userRepository = userRepository;
+    UserController(UserService userService){
+        this.userService = userService;
     }
     @PostMapping("/register")
-    ResponseEntity<Object> registerUser(@Valid @RequestBody UserInfoDto dto) throws Exception {
-        User user = User
-                .builder()
-                .login(dto.getLogin())
-                .fullName(dto.getName())
-                .password(dto.getPassword())
-                .build();
-
-        userRepository.save(user);
-
+    ResponseEntity<Object> registerUser(@Valid @RequestBody UserInfoDto UserInfodto) throws Exception {
+        userService.saveUser(UserInfodto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь добавлен!");
     }
 

@@ -73,7 +73,7 @@ public class TicketService {
 
         redisTemplate.opsForList().rightPush(userId, ticket);
 
-        kafkaProducerService.sendTicketToKafka(ticket);
+       // kafkaProducerService.sendTicketToKafka(ticket);
 
         return ResponseEntity.ok("Билет приобретён");
     }

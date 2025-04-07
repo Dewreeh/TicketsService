@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class KafkaProducerService {
+public class KafkaProducerService{
 
     private final KafkaTemplate<String, Ticket> kafkaTemplate;
 

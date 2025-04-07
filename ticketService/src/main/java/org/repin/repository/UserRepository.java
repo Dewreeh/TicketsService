@@ -34,4 +34,11 @@ public class UserRepository {
                 .findFirst();
     }
 
+    public Optional<User> findByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE login = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), username)
+                .stream()
+                .findFirst();
+    }
+
 }

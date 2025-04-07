@@ -1,28 +1,42 @@
 package org.repin.service;
 
+import org.repin.dto.AuthRequest;
 import org.repin.dto.UserInfoDto;
+import org.repin.enums.Roles;
 import org.repin.model.User;
 import org.repin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(UserInfoDto dto) throws Exception {
-        User user = User
-                .builder()
-                .login(dto.getLogin())
-                .fullName(dto.getName())
-                .password(dto.getPassword())
-                .build();
+    public void saveUser(UserInfoDto userInfoDto) throws Exception {
+        User user = new User();
+        user.setLogin(userInfoDto.getLogin());
+
+        user.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
+
+        user.setFullName(userInfoDto.getName());
+
+        user.setRole(Roles.USER);
 
         userRepository.save(user);
+    }
+
+    public void loginUser(AuthRequest authRequest) throws Exception {
+
+
+
     }
 }

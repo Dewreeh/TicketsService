@@ -5,8 +5,10 @@ import org.repin.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,10 +39,11 @@ public class TicketController {
 
     @PostMapping("/buy")
     public ResponseEntity<Object> buyTicket(@RequestParam("ticketId") Long ticketId,
-                                            @RequestParam("userId") Long userId) throws UserPrincipalNotFoundException {
+                                            @RequestParam("userId") Long userId) throws UserPrincipalNotFoundException, AccessDeniedException {
+
         return ticketService.buyTicket(ticketId, userId);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/get_my")
     public ResponseEntity<Object> getUserTickets(@RequestParam("userId") Long userId){
         return ticketService.findUserTickets(userId);
