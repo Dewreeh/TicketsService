@@ -1,7 +1,9 @@
 package org.repin.service;
 
 import org.repin.dto.ErrorResponse;
+import org.repin.dto.TicketDto;
 import org.repin.model.Ticket;
+import org.repin.repository.RouteRepository;
 import org.repin.repository.TicketRepository;
 import org.repin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final RouteRepository routeRepository;
     private final RedisTemplate<Long, Ticket> redisTemplate;
     private final KafkaProducerService kafkaProducerService;
 
@@ -25,11 +28,13 @@ public class TicketService {
     TicketService(TicketRepository ticketRepository,
                   UserRepository userRepository,
                   RedisTemplate<Long, Ticket> redisTemplate,
-                  KafkaProducerService kafkaProducerService) {
+                  KafkaProducerService kafkaProducerService,
+                  RouteRepository routeRepository) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.redisTemplate = redisTemplate;
         this.kafkaProducerService = kafkaProducerService;
+        this.routeRepository = routeRepository;
     }
 
     public List<Ticket> findAvailableTickets(String departure, String destination, String carrier, LocalDateTime dateTime, int limit, int offset){
@@ -49,7 +54,9 @@ public class TicketService {
 
         tickets = ticketRepository.findUserTickets(userId);
 
-        redisTemplate.opsForList().rightPushAll(userId, tickets);
+        if(!tickets.isEmpty()) {
+            redisTemplate.opsForList().rightPushAll(userId, tickets);
+        }
 
         return ResponseEntity.ok(tickets);
     }
@@ -73,8 +80,33 @@ public class TicketService {
 
         redisTemplate.opsForList().rightPush(userId, ticket);
 
-       // kafkaProducerService.sendTicketToKafka(ticket);
+        kafkaProducerService.sendTicketToKafka(ticket);
 
         return ResponseEntity.ok("Билет приобретён");
+    }
+
+    public ResponseEntity<Object> addTicket(TicketDto ticketDto) {
+
+        if(routeRepository.find(ticketDto.getRouteId()).isEmpty()){
+            return ResponseEntity.badRequest().body(new ErrorResponse("Маршрут в билете не существует"));
+        }
+
+
+        Ticket ticket = new Ticket();
+        ticket.setRouteId(ticketDto.getRouteId());
+        ticket.setDateTime(ticketDto.getDateTime());
+        ticket.setSeatNumber(ticketDto.getSeatNumber());
+        ticket.setPrice(ticketDto.getPrice());
+
+        ticketRepository.save(ticket);
+        return ResponseEntity.ok().build();
+    }
+
+    public void updateTicket(Ticket ticket) {
+        ticketRepository.update(ticket);
+    }
+
+    public void deleteTicket(Long id) {
+        ticketRepository.delete(id);
     }
 }

@@ -5,7 +5,6 @@ import org.repin.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
@@ -43,7 +42,7 @@ public class TicketController {
 
         return ticketService.buyTicket(ticketId, userId);
     }
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     @GetMapping("/get_my")
     public ResponseEntity<Object> getUserTickets(@RequestParam("userId") Long userId){
         return ticketService.findUserTickets(userId);

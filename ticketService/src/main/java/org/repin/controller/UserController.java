@@ -1,10 +1,7 @@
 package org.repin.controller;
 
 import jakarta.validation.Valid;
-import org.repin.dto.AuthRequest;
 import org.repin.dto.UserInfoDto;
-import org.repin.model.User;
-import org.repin.repository.UserRepository;
 import org.repin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping("/register")
-    ResponseEntity<Object> registerUser(@Valid @RequestBody UserInfoDto UserInfodto) throws Exception {
+    ResponseEntity<String> registerUser(@Valid @RequestBody UserInfoDto UserInfodto) throws Exception {
         userService.saveUser(UserInfodto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь добавлен!");
     }

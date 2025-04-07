@@ -23,7 +23,7 @@ public class TicketRepository {
         String sql = "SELECT t.* FROM tickets t " +
                 "JOIN routes r ON t.route_id = r.id " +
                 "JOIN carriers c ON r.carrier_id = c.id " +
-                "WHERE 1=1 " +
+                "WHERE t.id NOT IN (SELECT ticket_id FROM user_tickets) " +
                 (departure != null ? "AND r.departure_point ILIKE ? " : "") +
                 (destination != null ? "AND r.destination_point ILIKE ? " : "") +
                 (carrier != null ? "AND c.name ILIKE ? " : "") +
@@ -66,4 +66,45 @@ public class TicketRepository {
                 .stream()
                 .findFirst();
     }
+
+    public void save(Ticket ticket) {
+        String sql = "INSERT INTO tickets (route_id, date_time, seat_number, price) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                ticket.getRouteId(),
+                ticket.getDateTime(),
+                ticket.getSeatNumber(),
+                ticket.getPrice());
+    }
+
+    public void update(Ticket ticket) {
+        String sql = """
+        UPDATE tickets 
+        SET route_id = ?, 
+            date_time = ?, 
+            seat_number = ?, 
+            price = ?
+        WHERE id = ?
+        """;
+        int updatedRows = jdbcTemplate.update(
+                sql,
+                ticket.getRouteId(),
+                ticket.getDateTime(),
+                ticket.getSeatNumber(),
+                ticket.getPrice(),
+                ticket.getId());
+
+        if (updatedRows == 0) {
+            throw new IllegalArgumentException("Билет с ID " + ticket.getId() + " не найден");
+        }
+    }
+
+    public void delete(Long id) {
+        String sql = "DELETE FROM tickets WHERE id = ?";
+
+        int deletedRows = jdbcTemplate.update(sql, id);
+        if (deletedRows == 0) {
+            throw new IllegalArgumentException("Билет с ID " + id + " не найден");
+        }
+    }
+
 }

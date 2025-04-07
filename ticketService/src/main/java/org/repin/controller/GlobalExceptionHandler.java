@@ -5,6 +5,7 @@ import org.repin.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotExistsException(MissingServletRequestParameterException ex) {
+    public ResponseEntity<ErrorResponse> handleUserNotExistsException() {
         ErrorResponse errorResponse = new ErrorResponse(
                 "Перепроверьте названия и количество передаваемых аргументов"
         );
@@ -42,7 +43,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> AccessDeniedExceptionHandler(AccessDeniedException ex) {
+    public ResponseEntity<ErrorResponse> AccessDeniedExceptionHandler() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Доступ запрещён (ошибка авторизации)"));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> IllegalArgumentExceptionHandler(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed() {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ErrorResponse("Метод не поддерживается"));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException() {
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(new ErrorResponse("Неизвестная ошибка"));
     }
 }

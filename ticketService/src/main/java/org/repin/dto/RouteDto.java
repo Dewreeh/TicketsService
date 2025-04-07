@@ -1,18 +1,20 @@
 package org.repin.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class RouteDto {
-    private Long id;
+    @NotBlank(message = "Пункт отправления обязателен")
     private String departurePoint;
+
+    @NotBlank(message = "Пункт назначения обязателен")
     private String destinationPoint;
-    private CarrierDto carrier;
+
+    @NotNull(message = "ID перевозчика обязательно")
+    private Long carrierId;
+
+    @NotNull(message = "Длительность обязательна")
     private Integer durationMinutes;
 }

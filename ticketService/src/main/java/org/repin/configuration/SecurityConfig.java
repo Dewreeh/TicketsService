@@ -36,12 +36,20 @@ public class SecurityConfig {
                                 "/user/register",
                                 "/tickets/get"
                         ).permitAll()
-                        .requestMatchers("/tickets/get_my").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/admin/ticket/add",
+                                "/admin/ticket/update",
+                                "/admin/ticket/delete",
+                                "/admin/route/add",
+                                "/admin/route/update",
+                                "/admin/route/delete",
+                                "/admin/carrier/add",
+                                "/admin/carrier/update",
+                                "/admin/carrier/delete"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
