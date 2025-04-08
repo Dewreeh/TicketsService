@@ -1,17 +1,18 @@
 package org.repin.controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.repin.dto.ErrorResponse;
 import org.repin.exceptions.UserAlreadyExistsException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -30,9 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> handleUserNotExistsException() {
-        ErrorResponse errorResponse = new ErrorResponse(
-                "Перепроверьте названия и количество передаваемых аргументов"
-        );
+        ErrorResponse errorResponse = new ErrorResponse("Перепроверьте названия и количество передаваемых аргументов");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -45,8 +44,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> AccessDeniedExceptionHandler() {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Доступ запрещён (ошибка авторизации)"));
+    public ResponseEntity<ErrorResponse> AccessDeniedExceptionHandler(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Доступ запрещён (ошибка авторизации): {}" + ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -57,6 +56,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotAllowed() {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ErrorResponse("Метод не поддерживается"));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Доступ запрёщен (ситекло время жизни jwt)"));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleJBadCredentialsExceptionException(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> UsernameNotFoundExceptionException(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Пользователь не найден"));
     }
 
     @ExceptionHandler(Exception.class)

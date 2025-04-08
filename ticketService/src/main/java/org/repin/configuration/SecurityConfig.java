@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/login",
+                                "/refresh",
                                 "/user/register",
                                 "/tickets/get"
                         ).permitAll()
@@ -58,8 +59,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config,
-            PasswordEncoder passwordEncoder
-    ) throws Exception {
+            PasswordEncoder passwordEncoder)  {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(customUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);

@@ -21,6 +21,8 @@ public class UserController {
     UserController(UserService userService){
         this.userService = userService;
     }
+
+
     @PostMapping("/register")
     ResponseEntity<String> registerUser(@Valid @RequestBody UserInfoDto UserInfodto) throws Exception {
         userService.saveUser(UserInfodto);

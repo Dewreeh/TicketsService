@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.nio.file.AccessDeniedException;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +14,7 @@ import java.util.List;
 @RequestMapping("/tickets")
 public class TicketController {
     private final TicketService ticketService;
+
 
     @Autowired
     public TicketController(TicketService ticketService) {
@@ -38,13 +37,16 @@ public class TicketController {
 
     @PostMapping("/buy")
     public ResponseEntity<Object> buyTicket(@RequestParam("ticketId") Long ticketId,
-                                            @RequestParam("userId") Long userId) throws UserPrincipalNotFoundException, AccessDeniedException {
+                                            @RequestParam("userId") Long userId,
+                                            @RequestHeader("Authorization") String authHeader) throws AccessDeniedException {
 
-        return ticketService.buyTicket(ticketId, userId);
+        return ticketService.buyTicket(ticketId, userId, authHeader);
     }
 
     @GetMapping("/get_my")
-    public ResponseEntity<Object> getUserTickets(@RequestParam("userId") Long userId){
-        return ticketService.findUserTickets(userId);
+    public ResponseEntity<Object> getUserTickets(@RequestParam("userId") Long userId,
+                                                 @RequestHeader("Authorization") String authHeader) throws AccessDeniedException {
+
+        return ticketService.findUserTickets(userId, authHeader);
     }
 }

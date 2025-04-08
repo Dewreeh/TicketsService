@@ -66,7 +66,7 @@ public class RouteRepository {
     }
 
     public Optional<Route> find(Long id) {
-        String sql = "SELECT * FROM tickets WHERE id = ?";
+        String sql = "SELECT * FROM routes WHERE id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Route.class), id)
                 .stream()
                 .findFirst();

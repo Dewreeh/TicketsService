@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class UserInfoDto {
     @NotBlank(message = "Логин не должен быть пустым")
-    String login;
+    String username;
 
     @NotBlank(message = "Имя не должно быть пустым")
     String name;

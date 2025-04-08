@@ -12,4 +12,19 @@ public class AuthResponse {
 
     @JsonProperty("token_type")
     private String tokenType = "Bearer";
+
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
+    private Long userId;
+
+    public AuthResponse(String accessToken, String refreshToken, Long userId) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.userId = userId;
+    }
+
+
 }
+
+
