@@ -2,6 +2,7 @@ package org.repin.controller;
 
 import org.repin.dto.ErrorResponse;
 import org.repin.exceptions.UserAlreadyExistsException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -59,6 +61,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException() {
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(new ErrorResponse("Неизвестная ошибка"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Неизвестная ошибка"));
     }
 }
