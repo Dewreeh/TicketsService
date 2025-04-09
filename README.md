@@ -13,7 +13,7 @@ docker compose up
 docker-compose запустит 2 микросервиса, kafka, redis и развернёт БД с тестовыми данными.
 Микросервисы на 8080 и 8081 портах
 
-Также собрал небольшую postman коллекцию для тестирования API: https://drive.google.com/drive/folders/1S7yHqlHaajIUskcyb43_rnn5EJno981e?hl=ru
+Также собрал небольшую postman коллекцию для тестирования API: [https://drive.google.com/drive/folders/1S7yHqlHaajIUskcyb43_rnn5EJno981e?hl=ru](https://drive.google.com/drive/folders/1S7yHqlHaajIUskcyb43_rnn5EJno981e?hl=ru&q=sharedwith:public%20parent:1S7yHqlHaajIUskcyb43_rnn5EJno981e)
 Можно импортировать к себе и отправлять подготовленные запросы
 
 В БД добавил 3 тестовых пользователей:
