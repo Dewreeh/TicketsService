@@ -5,7 +5,7 @@
 -- Dumped from database version 17.0
 -- Dumped by pg_dump version 17.0
 
--- Started on 2025-04-09 02:59:02
+-- Started on 2025-04-09 19:59:17
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -306,6 +306,11 @@ COPY public.tickets (id, route_id, date_time, seat_number, price) FROM stdin;
 51	1	2025-04-18 14:30:00	70	3000.50
 52	4	2025-04-18 14:30:00	70	3000.50
 53	5	2025-04-18 14:30:00	70	3000.50
+54	5	2025-04-18 14:30:00	68	3000.50
+55	2	2025-04-18 14:30:00	68	3000.50
+56	1	2025-04-18 14:30:00	68	3000.50
+57	1	2025-04-18 14:30:00	68	3000.50
+58	3	2025-04-18 14:30:00	68	3000.50
 \.
 
 
@@ -321,6 +326,7 @@ COPY public.user_tickets (user_id, ticket_id) FROM stdin;
 35	46
 35	47
 35	48
+36	49
 \.
 
 
@@ -334,6 +340,7 @@ COPY public.users (id, login, password, full_name, role) FROM stdin;
 35	USER1	$2a$10$yQ8hy55Rx1Eo.7mLbTK/3uhJNW.QQ0DMwXqzGiBQaArD4SSzYJbvq	Антон	USER
 36	USER2	$2a$10$SklL35WvQArSs3AuqIkpVumIipL/V2FVB5P0/0PPvu1nlcwby63mS	Максим	USER
 34	ADMIN	$2a$10$myiDbM6yRxtjGFcJ7DROue76Q.tEemUoeuZXebLr8CiLMnH3uZdLa	Админ Админович	ADMIN
+38	User	$2a$10$5mvvNej71lM8Wy3jC4dvSeh2O9PhovJJ1zVRWlHaMR8mGoEeLq7om	aaa	USER
 \.
 
 
@@ -361,7 +368,7 @@ SELECT pg_catalog.setval('public.routes_id_seq', 1, false);
 -- Name: tickets_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tickets_id_seq', 53, true);
+SELECT pg_catalog.setval('public.tickets_id_seq', 58, true);
 
 
 --
@@ -370,7 +377,7 @@ SELECT pg_catalog.setval('public.tickets_id_seq', 53, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 37, true);
+SELECT pg_catalog.setval('public.users_id_seq', 38, true);
 
 
 --
@@ -463,7 +470,7 @@ ALTER TABLE ONLY public.user_tickets
     ADD CONSTRAINT user_tickets_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
--- Completed on 2025-04-09 02:59:05
+-- Completed on 2025-04-09 19:59:23
 
 --
 -- PostgreSQL database dump complete
