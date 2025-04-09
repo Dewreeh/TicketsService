@@ -1,5 +1,6 @@
 package org.repin.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.repin.dto.CarrierDto;
 import org.repin.dto.RouteDto;
@@ -36,18 +37,21 @@ public class AdminController {
     }
 
 
+    @Operation(description = "Добавление билета")
     @PostMapping("/ticket/add")
     public ResponseEntity<Object> addTicket(@RequestBody @Valid TicketDto ticketDto) {
 
         return ticketService.addTicket(ticketDto);
     }
 
+    @Operation(description = "Обновление билета")
     @PutMapping("/ticket/update")
     public ResponseEntity<Void> updateTicket(@RequestBody @Valid Ticket ticket) {
         ticketService.updateTicket(ticket);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(description = "Удаление билета")
     @DeleteMapping("/ticket/delete")
     public ResponseEntity<Void> deleteTicket(@RequestParam("id") Long id) {
         ticketService.deleteTicket(id);
@@ -55,18 +59,21 @@ public class AdminController {
     }
 
 
+    @Operation(description = "Добавление маршрута")
     @PostMapping("/route/add")
     public ResponseEntity<Void> addRoute(@RequestBody @Valid RouteDto routeDto) {
         routeService.addRoute(routeDto);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(description = "Обновление маршрута")
     @PutMapping("/route/update")
     public ResponseEntity<Void> updateRoute(@RequestBody @Valid Route route) {
         routeService.updateRoute(route);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(description = "Удаление маршрута")
     @DeleteMapping("/route/delete")
     public ResponseEntity<Void> deleteRoute(@RequestParam("id") Long id) {
         routeService.deleteRoute(id);
@@ -74,18 +81,21 @@ public class AdminController {
     }
 
 
+    @Operation(description = "Добавление перевозчика")
     @PostMapping("/carrier/add")
     public ResponseEntity<Void> addCarrier(@RequestBody @Valid CarrierDto carrierDto) {
         carrierService.addCarrier(carrierDto);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(description = "Обновление перевозчика")
     @PutMapping("/carrier/update")
     public ResponseEntity<Void> updateCarrier(@RequestBody @Valid Carrier carrier) {
         carrierService.updateCarrier(carrier);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(description = "Удаление перевозчика")
     @DeleteMapping("/carrier/delete")
     public ResponseEntity<Void> deleteCarrier(@RequestParam("id")  Long id) {
         carrierService.deleteCarrier(id);

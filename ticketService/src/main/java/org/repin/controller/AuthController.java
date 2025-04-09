@@ -1,5 +1,6 @@
 package org.repin.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.repin.dto.AuthRequest;
 import org.repin.dto.AuthResponse;
@@ -39,6 +40,7 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
+    @Operation(description = "Аутентификация пользователя")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
         try {
@@ -59,6 +61,7 @@ public class AuthController {
         }
     }
 
+    @Operation(description = "Обновление токена по рефреш токену")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest refreshRequest) {
             String refresh = refreshRequest.getRefreshToken();

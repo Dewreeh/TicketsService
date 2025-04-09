@@ -35,7 +35,8 @@ public class SecurityConfig {
                                 "/login",
                                 "/refresh",
                                 "/user/register",
-                                "/tickets/get"
+                                "/tickets/get",
+                                "/swagger-ui/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/admin/ticket/add",

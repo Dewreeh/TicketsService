@@ -1,5 +1,6 @@
 package org.repin.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.repin.dto.UserInfoDto;
 import org.repin.service.UserService;
@@ -22,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    @Operation(description = "Регистрирует пользователя, возвращает ошибку если username занят")
     @PostMapping("/register")
     ResponseEntity<String> registerUser(@Valid @RequestBody UserInfoDto UserInfodto) throws Exception {
         userService.saveUser(UserInfodto);
