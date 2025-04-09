@@ -13,8 +13,9 @@ public class TicketRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
     public void save(Ticket ticket) {
-        String sql = "INSERT INTO bought_tickets (route_id, date_time, seat_number, price) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO bought_tickets (id, route_id, date_time, seat_number, price) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql,
+                ticket.getId(),
                 ticket.getRouteId(),
                 ticket.getDateTime(),
                 ticket.getSeatNumber(),
