@@ -23,14 +23,14 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final RouteRepository routeRepository;
-    private final RedisTemplate<Long, Ticket> redisTemplate;
+    private final RedisTemplate<String, Ticket> redisTemplate;
     private final KafkaProducerService kafkaProducerService;
     private final JwtService jwtService;
 
     @Autowired
     TicketService(TicketRepository ticketRepository,
                   UserRepository userRepository,
-                  RedisTemplate<Long, Ticket> redisTemplate,
+                  RedisTemplate<String, Ticket> redisTemplate,
                   KafkaProducerService kafkaProducerService,
                   RouteRepository routeRepository,
                   JwtService jwtService) {
@@ -55,7 +55,7 @@ public class TicketService {
 
         jwtService.validateUserRights(authHeader, userId);
 
-        List<Ticket> tickets = redisTemplate.opsForList().range(userId, 0, -1);
+        List<Ticket> tickets = redisTemplate.opsForList().range(String.valueOf(userId), 0, -1);
 
         if(!tickets.isEmpty()){
             return ResponseEntity.ok(tickets);
@@ -64,7 +64,7 @@ public class TicketService {
         tickets = ticketRepository.findUserTickets(userId);
 
         if(!tickets.isEmpty()) {
-            redisTemplate.opsForList().rightPushAll(userId, tickets);
+            redisTemplate.opsForList().rightPushAll(String.valueOf(userId), tickets);
         }
 
         return ResponseEntity.ok(tickets);
@@ -89,7 +89,7 @@ public class TicketService {
 
         Ticket ticket = ticketRepository.find(ticketId).get(); //для сохранения в редис и отправки в кафку + мы ранее уже проверили наличие билета по id в таблице купленных, значит тут точно не будет null
 
-        redisTemplate.opsForList().rightPush(userId, ticket);
+        redisTemplate.opsForList().rightPush(String.valueOf(userId), ticket);
 
         kafkaProducerService.sendTicketToKafka(ticket);
 

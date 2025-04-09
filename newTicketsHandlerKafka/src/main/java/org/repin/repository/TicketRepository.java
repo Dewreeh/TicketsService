@@ -1,5 +1,6 @@
 package org.repin.repository;
 
+import org.repin.dto.Ticket;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,8 +12,12 @@ public class TicketRepository {
     TicketRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
-    public void markAsSold(Long ticketId, Long userId) {
-        String sql = "INSERT INTO user_tickets (user_id, ticket_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, userId, ticketId);
+    public void save(Ticket ticket) {
+        String sql = "INSERT INTO bought_tickets (route_id, date_time, seat_number, price) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                ticket.getRouteId(),
+                ticket.getDateTime(),
+                ticket.getSeatNumber(),
+                ticket.getPrice());
     }
 }
